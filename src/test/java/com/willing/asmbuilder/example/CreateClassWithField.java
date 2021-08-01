@@ -18,18 +18,21 @@ class CreateClassWithField {
         AsmClassBuilder asmClassBuilder = AsmClassBuilder.classBuilder();
 
         IClass iClass = new IClass("OneFieldTest", "com.willing.test");
-        asmClassBuilder
-                .buildClass(iClass)
+        asmClassBuilder.buildClass(iClass)
                 .buildJava8Version()
                 .buildWithJsonObject()
+                .buildSupperClass(new IClass(Object.class))
                 .buildAccess(AccessEnum.APUBLIC)
                 .createEmptyConstruct().initAccess(AccessEnum.APUBLIC);
-        asmClassBuilder.buildSupperClass(new IClass(Object.class));
 
         AsmFieldCreate field = asmClassBuilder.createField();
         field.initAccess(AccessEnum.APRIVATE);
-        field.initIKlass(new IClass(BigDecimal.class));
+        IClass iClass1 = new IClass(BigDecimal.class);
+        iClass1.setArrays(false);
+        field.initIKlass(iClass1);
         field.initName("name");
+        field.initFieldValue(new BigDecimal("0.00"));
+
 
 
         asmClassBuilder.generateClass();

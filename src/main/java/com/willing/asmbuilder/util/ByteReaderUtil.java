@@ -1,21 +1,16 @@
 package com.willing.asmbuilder.util;
 
-import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.Printer;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
-import org.springframework.util.StreamUtils;
 
 import java.io.*;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.util.List;
 
 public class ByteReaderUtil {
@@ -24,7 +19,8 @@ public class ByteReaderUtil {
         byte[] bytes = new byte[0];
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
-            bytes = StreamUtils.copyToByteArray(fileInputStream);
+
+            bytes =   IoUtil.readBytes(fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
