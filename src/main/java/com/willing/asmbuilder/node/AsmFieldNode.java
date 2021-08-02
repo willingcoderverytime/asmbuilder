@@ -1,10 +1,15 @@
 package com.willing.asmbuilder.node;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.willing.asmbuilder.AbstractNode;
 import com.willing.asmbuilder.IClass;
+import com.willing.asmbuilder.create.AnnotationCreate;
 import org.objectweb.asm.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AsmFieldNode extends AbstractNode {
 
@@ -15,6 +20,7 @@ public class AsmFieldNode extends AbstractNode {
 
     private Object initValue;
 
+    private List<AnnotationInfo> annotationInfoList;
 
     @Override
     public void validate() {
@@ -36,7 +42,11 @@ public class AsmFieldNode extends AbstractNode {
         String fullNameType = cn.getKlzz().getFullName();
         //  todo value 是否可以童工这个进行处理。
         FieldVisitor fv = cw.visitField(getAccess(), name, type.generatorArgs(), null, null);
-        visitAnnotation(fv,name,cn);
+        if (CollectionUtil.isNotEmpty(annotationInfoList)) {
+            for (AnnotationInfo asmFieldNode : annotationInfoList) {
+                asmFieldNode.visitFieldAnnotation(fv);
+            }
+        }
         fv.visitEnd();
         MethodVisitor setName = cw.visitMethod(Opcodes.ACC_PUBLIC, "set"+ StrUtil.upperFirst(name), descriptor(null,type), null, null);
         setName.visitCode();
@@ -57,6 +67,9 @@ public class AsmFieldNode extends AbstractNode {
         getName.visitMaxs(1, 1);
         getName.visitInsn(Opcodes.ARETURN);
         getName.visitEnd();
+
+
+
     }
 
     @Override
@@ -89,8 +102,15 @@ public class AsmFieldNode extends AbstractNode {
         this.initValue = initValue;
     }
 
+    public List<AnnotationInfo> getAnnotationInfoList() {
+        return annotationInfoList;
+    }
 
-    public void visitAnnotation(FieldVisitor field, String name,KlassNode cn){
+    public void setAnnotationInfoList(List<AnnotationInfo> annotationInfoList) {
+        this.annotationInfoList = annotationInfoList;
+    }
+
+/*    public void visitAnnotation(FieldVisitor field, String name, KlassNode cn){
         if (cn.isJson()) {
             AnnotationVisitor json = field.visitAnnotation("Lcom/fasterxml/jackson/annotation/JsonProperty;", true);
             json.visit("value",name);
@@ -107,5 +127,5 @@ public class AsmFieldNode extends AbstractNode {
             xml.visitEnd();
         }
 
-    }
+    }*/
 }

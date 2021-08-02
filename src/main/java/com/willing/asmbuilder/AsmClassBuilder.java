@@ -42,14 +42,7 @@ public class AsmClassBuilder {
         return this;
     }
 
-    public AsmClassBuilder buildWithJsonObject() {
-        clazzNode.setIsJson();
-        return this;
-    }
-    public AsmClassBuilder buildWithXmlObject() {
-        clazzNode.setIsXml();
-        return this;
-    }
+
 
     public AsmClassBuilder buildSupperClass(IClass superClazz) {
         clazzNode.setSupperClazz(superClazz);

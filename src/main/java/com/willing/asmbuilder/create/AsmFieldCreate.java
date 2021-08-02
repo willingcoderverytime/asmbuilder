@@ -2,7 +2,11 @@ package com.willing.asmbuilder.create;
 
 import com.willing.asmbuilder.IClass;
 import com.willing.asmbuilder.enums.AccessEnum;
+import com.willing.asmbuilder.node.AnnotationInfo;
 import com.willing.asmbuilder.node.AsmFieldNode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AsmFieldCreate {
 
@@ -42,5 +46,16 @@ public class AsmFieldCreate {
     public AsmFieldCreate initIKlass(IClass clazz){
         fieldNode.setType(clazz);
         return this;
+    }
+    public AnnotationCreate createAnnotationCreate(){
+        List<AnnotationInfo> annotationInfoList = fieldNode.getAnnotationInfoList();
+        if (annotationInfoList==null) {
+            annotationInfoList = new ArrayList<>();
+            fieldNode.setAnnotationInfoList(annotationInfoList);
+        }
+        AnnotationInfo annotationInfo = new AnnotationInfo();
+        AnnotationCreate annotationCreate = new AnnotationCreate(annotationInfo);
+        annotationInfoList.add(annotationInfo);
+        return annotationCreate;
     }
 }

@@ -1,10 +1,13 @@
 package com.willing.asmbuilder.node;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.willing.asmbuilder.AbstractNode;
 import com.willing.asmbuilder.IClass;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import java.util.List;
 
 public class EmptyInitNode extends AbstractNode {
 
@@ -14,9 +17,19 @@ public class EmptyInitNode extends AbstractNode {
 
     private MethodVisitor constructor;
 
+    private List<AnnotationInfo> annotationInfoList;
+
     @Override
     public void validate() {
 
+    }
+
+    public List<AnnotationInfo> getAnnotationInfoList() {
+        return annotationInfoList;
+    }
+
+    public void setAnnotationInfoList(List<AnnotationInfo> annotationInfoList) {
+        this.annotationInfoList = annotationInfoList;
     }
 
     @Override
@@ -59,6 +72,12 @@ public class EmptyInitNode extends AbstractNode {
         }
         constructor.visitInsn(Opcodes.RETURN);
         constructor.visitMaxs(1, 1);
+
+        if (CollectionUtil.isNotEmpty(annotationInfoList)) {
+            for (AnnotationInfo asmFieldNode : annotationInfoList) {
+                asmFieldNode.visitMethodAnnotation(constructor);
+            }
+        }
     }
 
     @Override

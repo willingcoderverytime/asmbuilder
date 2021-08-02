@@ -10,8 +10,7 @@ public abstract class AbstractNode implements AsmValidate {
     // 泛型
     private String signature;
 
-    private boolean isJson=false;
-    private boolean isXml=false;
+
 
 
     protected abstract void nameValidate();
@@ -40,13 +39,7 @@ public abstract class AbstractNode implements AsmValidate {
         this.signature = signature;
     }
 
-    public void setJson(boolean json) {
-        isJson = json;
-    }
 
-    public void setXml(boolean xml) {
-        isXml = xml;
-    }
 
     public String descriptor(IClass output, IClass... inputs) {
         String returns = "V";
@@ -65,17 +58,5 @@ public abstract class AbstractNode implements AsmValidate {
         return args + returns;
     }
 
-    public   boolean isJson(){
-        return isJson;
-    }
 
-    public void setIsJson(){
-        isJson=true;
-    }
-    public boolean isXml(){
-        return isXml;
-    }
-    public void setIsXml(){
-        isXml=true;
-    }
 }

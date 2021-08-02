@@ -1,9 +1,13 @@
 package com.willing.asmbuilder.node;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.willing.asmbuilder.AbstractNode;
 import com.willing.asmbuilder.IClass;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Type;
 
 import java.util.List;
 
@@ -23,6 +27,7 @@ public class KlassNode extends AbstractNode {
     private List<AsmFieldNode> fieldNodeList;
     private List<AsmMethodNode> methodNodeList;
 
+    private List<AnnotationInfo> annotationInfoList;
 
     @Override
     public void validate() {
@@ -81,7 +86,19 @@ public class KlassNode extends AbstractNode {
                 asmFieldNode.beforeVisit(cw,this);
             }
         }
+
+        if (CollectionUtil.isNotEmpty(annotationInfoList)) {
+            for (AnnotationInfo asmFieldNode : annotationInfoList) {
+                visitAnnotation(cw,asmFieldNode);
+            }
+        }
+
     }
+
+    public void visitAnnotation(ClassWriter cw , AnnotationInfo name){
+        name.visitClassAnnotation(cw);
+    }
+
 
     @Override
     public void afterVisit(ClassWriter cw ,KlassNode kn) {
@@ -174,5 +191,13 @@ public class KlassNode extends AbstractNode {
 
     public void setMethodNodeList(List<AsmMethodNode> methodNodeList) {
         this.methodNodeList = methodNodeList;
+    }
+
+    public List<AnnotationInfo> getAnnotationInfoList() {
+        return annotationInfoList;
+    }
+
+    public void setAnnotationInfoList(List<AnnotationInfo> annotationInfoList) {
+        this.annotationInfoList = annotationInfoList;
     }
 }
