@@ -1,23 +1,23 @@
 package com.willing.asmbuilder;
 
 import cn.hutool.core.util.StrUtil;
-import com.willing.asmbuilder.AbstractNode;
 
-public class IClass implements AsmValidate {
+public class EnumClass implements AsmValidate {
 
     private String name;
 
     private String packageName;
     // annotation visit use it to do something
 
-    private boolean isArrays=false;
+    private String value;
 
-    public IClass(String name, String packageName) {
+
+    public EnumClass(String name, String packageName) {
         this.name = name;
         this.packageName = packageName;
     }
 
-    public IClass(Class<?> clazz) {
+    public EnumClass(Class<?> clazz) {
         this.name = clazz.getSimpleName();
         this.packageName = clazz.getPackage().getName();
     }
@@ -28,8 +28,13 @@ public class IClass implements AsmValidate {
     }
 
 
+    public String getValue() {
+        return value;
+    }
 
-
+    public void setValue(String value) {
+        this.value = value;
+    }
 
     public String getName() {
         return name;
@@ -47,25 +52,13 @@ public class IClass implements AsmValidate {
         this.packageName = packageName;
     }
 
-    public boolean isArrays() {
-        return isArrays;
-    }
 
-    public void setArrays(boolean arrays) {
-        isArrays = arrays;
-    }
-
-
-    public String generatorArgs(){
-        if (isArrays) {
-            return "[L"+getFullName()+";";
-        }else{
-            return "L"+getFullName()+";";
-        }
+    public String generatorArgs() {
+        return "L" + getFullName() + ";";
     }
 
     public String getFullName() {
-        return point2Diagonal(packageName+"."+name);
+        return point2Diagonal(packageName + "." + name);
     }
 
     public static String diagonal2Point(String className) {
@@ -90,7 +83,6 @@ public class IClass implements AsmValidate {
         }
         return className;
     }
-
 
 
 }

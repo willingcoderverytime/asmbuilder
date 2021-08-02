@@ -2,10 +2,7 @@ package com.willing.asmbuilder;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.willing.asmbuilder.create.AsmConstructCreate;
-import com.willing.asmbuilder.create.AsmEmptyConstructCreate;
-import com.willing.asmbuilder.create.AsmFieldCreate;
-import com.willing.asmbuilder.create.AsmMethodCreate;
+import com.willing.asmbuilder.create.*;
 import com.willing.asmbuilder.enums.AccessEnum;
 import com.willing.asmbuilder.node.*;
 import com.willing.asmbuilder.util.ByteReaderUtil;
@@ -78,7 +75,17 @@ public class AsmClassBuilder {
         AsmConstructCreate asmConstructBuilder = new AsmConstructCreate(initNode);
         return asmConstructBuilder;
     }
-
+    public AnnotationCreate createAnnotationCreate(){
+        List<AnnotationInfo> annotationInfoList = clazzNode.getAnnotationInfoList();
+        if (annotationInfoList==null) {
+            annotationInfoList = new ArrayList<>();
+            clazzNode.setAnnotationInfoList(annotationInfoList);
+        }
+        AnnotationInfo annotationInfo = new AnnotationInfo();
+        AnnotationCreate annotationCreate = new AnnotationCreate(annotationInfo);
+        annotationInfoList.add(annotationInfo);
+        return annotationCreate;
+    }
     public AsmMethodCreate createMethod() {
         List<AsmMethodNode> methodNodeList = clazzNode.getMethodNodeList();
         if (CollectionUtil.isEmpty(methodNodeList)) {
@@ -87,8 +94,8 @@ public class AsmClassBuilder {
         }
         AsmMethodNode initNode = new AsmMethodNode();
         methodNodeList.add(initNode);
-        AsmMethodCreate asmConstructBuilder = new AsmMethodCreate(initNode);
-        return asmConstructBuilder;
+        AsmMethodCreate methodCreate = new AsmMethodCreate(initNode);
+        return methodCreate;
     }
 
     public AsmFieldCreate createField() {
@@ -99,8 +106,8 @@ public class AsmClassBuilder {
         }
         AsmFieldNode fieldNode = new AsmFieldNode();
         fieldNodeList.add(fieldNode);
-        AsmFieldCreate asmConstructBuilder = new AsmFieldCreate(fieldNode);
-        return asmConstructBuilder;
+        AsmFieldCreate fieldCreate = new AsmFieldCreate(fieldNode);
+        return fieldCreate;
     }
 
     public String getBaseDir() {

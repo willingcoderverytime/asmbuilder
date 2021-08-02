@@ -1,4 +1,4 @@
-package com.willing.asmbuilder.example;
+package com.willing.asmbuilder.example.create;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

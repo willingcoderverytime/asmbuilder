@@ -1,11 +1,14 @@
 package com.willing.asmbuilder.node;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.willing.asmbuilder.AbstractNode;
 import com.willing.asmbuilder.IClass;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -40,7 +43,14 @@ public class AsmMethodNode extends AbstractNode {
 
     @Override
     public void beforeVisit(ClassWriter cw, KlassNode cn) {
+         methodVisitor = cw.visitMethod(Opcodes.ACC_PUBLIC, name, descriptor(returnNode,args), null, null);
+        methodVisitor.visitCode();
 
+
+        IClass iClass = new IClass(RequestBody.class);
+
+        AnnotationVisitor annotationVisitor = methodVisitor.visitParameterAnnotation(0, iClass.generatorArgs(), true);
+        annotationVisitor.visitEnd();
         if (CollectionUtil.isNotEmpty(annotationInfoList)) {
             for (AnnotationInfo asmFieldNode : annotationInfoList) {
                 asmFieldNode.visitMethodAnnotation(methodVisitor);
@@ -50,7 +60,15 @@ public class AsmMethodNode extends AbstractNode {
 
     @Override
     public void afterVisit(ClassWriter cw, KlassNode cn) {
+        if (returnNode==null) {
 
+            methodVisitor.visitInsn(Opcodes.RETURN);
+        }else{
+            methodVisitor.visitInsn(Opcodes.ARETURN);
+        }
+
+
+        methodVisitor.visitEnd();
     }
 
     public List<AnnotationInfo> getAnnotationInfoList() {
@@ -92,4 +110,6 @@ public class AsmMethodNode extends AbstractNode {
     public void setExceptions(IClass[] exceptions) {
         this.exceptions = exceptions;
     }
+
+
 }

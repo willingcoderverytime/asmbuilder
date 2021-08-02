@@ -1,4 +1,4 @@
-package com.willing.asmbuilder.example;
+package com.willing.asmbuilder.example.create;
 
 import com.willing.asmbuilder.AsmClassBuilder;
 import com.willing.asmbuilder.IClass;
